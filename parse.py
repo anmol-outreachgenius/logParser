@@ -2,7 +2,6 @@
 # !pip install --upgrade google-cloud-storage google-cloud-bigquery google-cloud-bigquery-storage
 # !gcloud auth application-default login
 from google.cloud import storage
-import google.cloud.bigquery.dbapi as bq
 import re
 import pprint
 from urllib.parse import parse_qs
