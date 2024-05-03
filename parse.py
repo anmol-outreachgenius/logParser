@@ -5,11 +5,10 @@ from urllib.parse import parse_qs
 import psycopg2
 import os
 import json
-from geoip import geolite2
 import datetime
+import ipcheck
 
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("") + "/key.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './key.json'
 
 storage_client = storage.Client()
 
@@ -33,10 +32,10 @@ for blob in list_blobs():
             parsed_url = parse_qs(
                 parsed_blob["httpRequest"]["requestUrl"].split("?")[1]
             )
-            parsed_url["ip"] = geolite2.lookup(parsed_blob["httpRequest"]["remoteIp"])
+            parsed_url["ip"] = parsed_blob["httpRequest"]["remoteIp"]
             parsed_url["latency"] = parsed_blob["httpRequest"]["latency"]
             parsed_urls.append(parsed_url)
-    blob.delete()
+    blob.remove();
 
 pprint.pp(parsed_urls[0])
 
@@ -75,15 +74,15 @@ def createColumn(
     screen_width,
     screen_height,
     country,
-    timezone,
-    subdivisions,
+    ASN,
+    city,
     user_agent,
     latency,
     ip_address,
     browser,
     is_mobile,
 ):
-    query = "INSERT INTO Logs (sessionId, visited_at, pid, uid,url,referer,screen_width,screen_height,country,timezone,subdivisions,user_agent,latency,ip_address,browser,is_mobile) VALUES (%s, %s, %s, %s, %s, %s,%s,%s,%s, %s,%s,%s,%s,%s,%s,%s)"
+    query = "INSERT INTO Logs (sessionId, visited_at, pid, uid,url,referer,screen_width,screen_height,country,ASN,city,user_agent,latency,ip_address,browser,is_mobile) VALUES (%s, %s, %s, %s, %s, %s,%s,%s,%s, %s,%s,%s,%s,%s,%s,%s)"
     cur = conn.cursor()
     cur.execute(
         query,
@@ -97,8 +96,8 @@ def createColumn(
             screen_width,
             screen_height,
             country,
-            timezone,
-            subdivisions,
+            ASN,
+            city,
             user_agent,
             latency,
             ip_address,
@@ -135,12 +134,12 @@ def handleData(data):
             "TODO",
             int(data["sr"][0].split("x")[0]),
             int(data["sr"][0].split("x")[1]),
-            data["ip"].country,
-            data["ip"].timezone,
-            ",".join(list(data["ip"].subdivisions)),
+            ipcheck.get_country(data["ip"]),
+            ipcheck.get_asn(data["ip"]),
+            ipcheck.get_city(data["ip"]),
             data["ua"][0],
             data["latency"],
-            data["ip"].ip,
+            data["ip"],
             data["bn"][0],
             data["md"][0],
         )
