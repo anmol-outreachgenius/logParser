@@ -1,4 +1,4 @@
 google-cloud-storage
 psycopg2
-python-geoip-python34
+python-geoip-python3
 python-geoip-geolite2
