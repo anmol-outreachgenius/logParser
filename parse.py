@@ -58,10 +58,10 @@ def sanitize_input(inputData):
     sanitized_data = re.sub(r'[^a-zA-Z0-9\-\_\s]', '', inputData)
     return sanitized_data
 
-def createColumn(sessionId, timestamp, pid, uid):
-    query = 'INSERT INTO Logs (sessionId, visited_at, pid, uid) VALUES (%s, %s, %s, %s)'
+def createColumn(sessionId, timestamp, pid, uid,url,location,referer):
+    query = 'INSERT INTO Logs (sessionId, visited_at, pid, uid,url,location,referer) VALUES (%s, %s, %s, %s, %s,%s,%s)'
     cur = conn.cursor()
-    cur.execute(query, (sessionId, timestamp, pid, uid))
+    cur.execute(query, (sessionId, timestamp, pid, uid,url,location,referer))
     print('created column')
     conn.commit()
 
@@ -79,7 +79,7 @@ def setValue(sessionId, column, value):
 
 def handleData(data):
     if (data["ev"][0] == 'pageView') :
-        createColumn(data['sessionId'][0],datetime.datetime.fromtimestamp(int(data['ts'][0])/1000),data['pid'][0],data['uid'][0])
+        createColumn(data['sessionId'][0],datetime.datetime.fromtimestamp(int(data['ts'][0])/1000),data['pid'][0],data['uid'][0],data['dl'][0],'TODO','TODO')
         
     if (data["ev"][0] == 'sessionEnd') :
         setValue(data['sessionId'][0],'session_duration',eval(data['ed'][0])['timeSpent'])

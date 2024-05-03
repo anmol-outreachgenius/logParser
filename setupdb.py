@@ -12,7 +12,7 @@ db= psycopg2.connect(
 cur = db.cursor()
 
 cur.execute('''
-            Create Table Logs (
+            CREATE Table Logs (
 uid varchar(200),
 pid varchar(200),
 sessionId varchar(200),
@@ -22,6 +22,8 @@ cta_clicks int default 0,
 form_interactons int default 0,
 scroll_depth float default 0,
 referer varchar(400),
+url varchar(400),
+ip varchar(100),
 video_engagements int default 0,
 social_media_clicks int default 0,
 file_downloads int default 0,
