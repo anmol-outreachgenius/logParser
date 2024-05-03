@@ -7,7 +7,7 @@ import pprint
 from urllib.parse import parse_qs
 import psycopg2
 import os
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './key.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.getcwd()+'/key.json'
 
 # %%
 storage_client = storage.Client()
