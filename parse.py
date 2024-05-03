@@ -9,7 +9,7 @@ from geoip import geolite2
 import datetime
 
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.abspath('')+'/key.json'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("") + "/key.json"
 
 storage_client = storage.Client()
 
@@ -36,6 +36,7 @@ for blob in list_blobs():
             parsed_url["ip"] = geolite2.lookup(parsed_blob["httpRequest"]["remoteIp"])
             parsed_url["latency"] = parsed_blob["httpRequest"]["latency"]
             parsed_urls.append(parsed_url)
+    blob.delete()
 
 pprint.pp(parsed_urls[0])
 
